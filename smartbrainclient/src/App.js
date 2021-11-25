@@ -7,14 +7,10 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition'
 import axios from 'axios';
 import Particles from "react-tsparticles";
-// import Clarifai from 'clarifai'
 import React, { Component } from 'react';
 import Signin from './components/Signin/Signin';
 
-// const serverUrl = process.env.SERVER_URL ? process.env.SERVER_URL : 'http://localhost:5000'
-const serverUrl = process.env.SERVER_URL ? process.env.SERVER_URL : 'server-service'
-// const workerURL = process.env.WORKER_URL ? process.env.WORKER_URL  : 'http://localhost:2000'
-const workerURL = process.env.WORKER_URL ? process.env.WORKER_URL  : 'worker-service'
+
 const default_pic = 'https://fitmodelsllc.com/wp-content/uploads/2016/11/Lisa-Smith-769x1024.jpg'
 const initialState = {
   input : '',
@@ -34,9 +30,6 @@ const initialState = {
   }
 }
 
-// const apps = new Clarifai.App({
-//   apiKey: '6a2047e09be14d4f800765f2be520f2a'
-// })
 
 const particleOptions = {
   particles: {
@@ -101,14 +94,7 @@ class App extends Component {
     this.state = initialState
   };
 
-  // componentDidMount() {
-  //   // const serverUrl = 'http://localhost:5000/'
-  //   this.setState(Object.assign(this.state.user,{rank:'submit a picture to find out'}))
-  //   console.log(this.state.user.rank)
-  // }
-
   componentDidMount() {
-    // const serverUrl = 'http://localhost:5000/'
     this.calculateFaceLocation2(default_pic)
   }
 
@@ -125,45 +111,11 @@ class App extends Component {
       }
     })
     this.updateRank()
-
   }
   
   onInputChange = (event) => {
     this.setState({input: event.target.value});
   }
-  calculateFaceLocation = (data) => {
-    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-    let image = document.getElementById('inputImage');
-    let width = Number(image.width);
-    let height = Number(image.height);
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - (clarifaiFace.right_col * width),
-      bottomRow: height - (clarifaiFace.bottom_row * height)
-    }
-    // return {
-    //   leftCol: 96, // x
-    //   topRow: 251, //y
-    //   rightCol: 500-398  , //width - (x+w)
-    //   bottomRow: 752-647 // height - (y+h)
-    // }
-  }
-
-  // updateNumber() {
-  //   let imgEndpoint = serverUrl + '/api/imagecount'
-  //   fetch(imgEndpoint,{
-  //     method: 'put',
-  //     headers: {'Content-Type':'application/json','Accept': 'application/json'},
-  //     body: JSON.stringify({
-  //         id: this.state.user.id
-  //     })
-  //   })
-  //   .then(response  => response.json())
-  //   .then(entries => {
-  //     this.setState(Object.assign(this.state.user,{entries:entries})) 
-  //   })
-  // }
 
     updateNumber = async () => {
     let imgEndpoint =  '/api/imagecount'
@@ -175,21 +127,6 @@ class App extends Component {
       this.setState(Object.assign(this.state.user,{entries:entries})) 
     })
   }
-
-  // updateRank() {
-  //   let imgEndpoint = serverUrl + '/api/imagerank'
-  //   fetch(imgEndpoint,{
-  //     method: 'put',
-  //     headers: {'Content-Type':'application/json','Accept': 'application/json'},
-  //     body: JSON.stringify({
-  //         id: this.state.user.id
-  //     })
-  //   })
-  //   .then(response  => response.json())
-    // .then(rank => {
-    //   this.setState(Object.assign(this.state.user,{rank:rank})) 
-    // })
-  // }
   
   updateRank = async () => {
     let imgEndpoint =  '/api/imagerank'
@@ -201,31 +138,6 @@ class App extends Component {
       this.setState(Object.assign(this.state.user,{rank:rank})) 
     })
   }
-
-// fix the attempt to make the server call the ML model later
-  calculateFaceLocation3 = async (url) => { 
-    let imgEndpoint = '/api/getbbox'
-    await axios.put(imgEndpoint, {
-      url: url
-    })
-      .then(response => response.data)
-      .then(box => this.displayFaceBox(box))
-      .catch(err => console.log(err))
-      .then(this.updateNumber())
-      .then(this.updateRank())
-      .catch(err => console.log(err))
-  }
-
-  // calculateFaceLocation2(url) { 
-  //   let endpoint = workerURL +'/worker/ml?url=' + url;
-  //     fetch(endpoint).then(response => response.json())
-  //     .then(boxes => boxes[0])
-  //     .then(box => this.displayFaceBox(box))
-  //     .catch(err => console.log(err))
-  //     .then(this.updateNumber())
-  //     .then(this.updateRank())
-  //     .catch(err => console.log(err))
-  // }
 
   calculateFaceLocation2 = async (url) => {
     let endpoint =  '/worker/ml?url=' + url;
@@ -248,27 +160,12 @@ class App extends Component {
     
   }
 
-  // onSubmitOld = () => {
-  //   // console.log(this.state.input); //https://samples.clarifai.com/face-det.jpg
-  //   this.setState({imageURL: this.state.input});
-  //   apps.models.predict(Clarifai.FACE_DETECT_MODEL,this.state.input)
-  //     .then(response => this.displayFaceBox(this.calculateFaceLocation(response)))
-  //     .catch(err => console.log(err));
-  // }
   onPictureSubmit = () => {
     // console.log(this.state.input); //https://samples.clarifai.com/face-det.jpg
     this.setState({imageURL: this.state.input});
     this.calculateFaceLocation2(this.state.input)
     // this.displayFaceBox(this.calculateFaceLocation2(this.state.input))
   }
-
-  // route === 'signout'
-  // ? this.setState(initialState)
-  // : (
-  //   route === 'home'
-  //   ? this.setState({ isSignedIn: true })
-  //   : this.setState({ route: route })
-  // )
 
   onRouteChange = (route) => {
     route === 'home'
@@ -282,10 +179,6 @@ class App extends Component {
       <div className="App">
         <Particles className='particles'
           params={particleOptions}
-          // style={{
-          //   width: '100%',
-          //   backgroundImage: `url(${logo})` 
-          // }}
         />
         <Navigation onRouteChange = {this.onRouteChange} isSignedIn = {isSignedIn}/>
         {
