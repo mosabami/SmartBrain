@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: mosabami/smartbrainworker:v2
-        imagePullPolicy: Always
+        image: mosabami/smartbrainworker:v10
         resources:
         ports:
         - containerPort: 2000

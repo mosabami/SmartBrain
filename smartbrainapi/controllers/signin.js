@@ -1,5 +1,8 @@
+const  { Password }  = require('../helpers/password');
+const passwordHasher = new Password()
+
 const tableName = 'users'
-const handleSignin = (req,res,db,bcrypt) => {
+const handleSignin = (req,res,db) => {
     let { email, password } = req.body
     if (!email || !password) {
         return res.status(400).json('incorrect form submision')
@@ -7,9 +10,9 @@ const handleSignin = (req,res,db,bcrypt) => {
     db.select('email','hash').from('login')
         .where('email','=',email)
         .then(data => {
-            // console.log(data)
+            console.log(data)
             const { email,hash } = data[0];
-            if(bcrypt.compareSync(password, hash)) {
+            if(passwordHasher.compare(hash, password)) {
                 console.log('the hash is',hash);
                 return db.select('*').from(tableName)
                 .where('email','=',email)

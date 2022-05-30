@@ -8,12 +8,12 @@ from flask_cors import CORS, cross_origin
 import redis
 import json
 
-try:
-    redis_host = os.environ['REDIS_HOST']
-except:
-    redis_host = 'localhost'
-r = redis.Redis(host=redis_host, port=6379, db=0)
-print(redis_host)
+# try:
+#     redis_host = os.environ['REDIS_HOST']
+# except:
+#     redis_host = '127.0.0.1'
+# r = redis.Redis(host=redis_host, port=6379, db=0)
+# print(redis_host)
 
 app = Flask(__name__)
 
@@ -21,25 +21,26 @@ app = Flask(__name__)
 try:
     origin = os.environ['CLIENT_URL']
 except(KeyError):
-    origin = "http://localhost:*"
-    # origin='*'
+    # origin = "http://localhost:*"
+    origin = '*'
 print(origin)
-CORS(app, support_credentials=True,origins=[origin])
+CORS(app, support_credentials=True, origins=[origin])
 
-def run_ml_model(url,img_data,redisInstance,filename = 'image_name.jpg'):
+
+def run_ml_model(url, img_data, redisInstance, filename='image_name.jpg'):
     with open(filename, 'wb') as handler:
         handler.write(img_data)
     img = cv2.imread(filename)
     width = 500
-    height = int(img.shape[0]/img.shape[1] * 500) 
+    height = int(img.shape[0]/img.shape[1] * 500)
     dim = (width, height)
-    pixels = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    pixels = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
     detector = MTCNN()
     # detect faces in the image
     faces = detector.detect_faces(pixels)
     # for face in faces:
     #     print(face)
-    # print(faces) 
+    # print(faces)
     results = []
     for face in faces:
         # print(face)
@@ -49,29 +50,45 @@ def run_ml_model(url,img_data,redisInstance,filename = 'image_name.jpg'):
         y = faces_coordinates[1]
         w = faces_coordinates[2]
         h = faces_coordinates[3]
-        results.append({"leftCol":x,"topRow":y,"rightCol":width-(x+w),"bottomRow":height-(y+h)})
+        results.append({"leftCol": x, "topRow": y,
+                       "rightCol": width-(x+w), "bottomRow": height-(y+h)})
         cv2.rectangle(pixels, (x, y), (x+w, y+h), (255, 0, 0), 2)
         # print(x+w,y+h)
     # cv2.imwrite("image_name2.jpg",pixels)
     # print(height)
-    os.remove(filename) 
+    os.remove(filename)
     results = results[0]
     redisInstance.set(url, json.dumps(results))
-    print('had to run the calculation',json.dumps(results))
+    print('had to run the calculation', json.dumps(results))
     return results
 
-# @cross_origin(supports_credentials=True)
+
+@cross_origin(supports_credentials=True)
+@app.route('/', methods=['GET', 'POST'])
+def get_rhome():
+    return 'okay python2'
+
+
+@cross_origin(supports_credentials=True)
+@app.route('/worker', methods=['GET', 'POST'])
+def get_home():
+    return 'okay python'
+
+
+@cross_origin(supports_credentials=True)
 @app.route('/worker/ml', methods=['GET', 'POST'])
 def get_detected():
     url = request.args.get('url')
     print(url)
     img_data = requests.get(url).content
-    try:
-        results =  r.get(url).decode("utf-8")
-        print('no calculation required',results)
-        results = json.loads(results)
-    except AttributeError as e:
-        results = run_ml_model(url,img_data,r)
+    # try:
+    #     results = r.get(url).decode("utf-8")
+    #     print('no calculation required', results)
+    #     results = json.loads(results)
+    # except AttributeError as e:
+    results = run_ml_model(url, img_data, r)
     return jsonify(results)
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=2000)

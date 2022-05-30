@@ -11,7 +11,7 @@ import React, { Component } from 'react';
 import Signin from './components/Signin/Signin';
 
 
-const default_pic = 'https://fitmodelsllc.com/wp-content/uploads/2016/11/Lisa-Smith-769x1024.jpg'
+const default_pic = 'https://hips.hearstapps.com/hmg-prod/images/synd-presentation-soledad-obrien-blue-dress-photo-fullcolor-light-rgb-1639520494.png'
 const initialState = {
   input : '',
   imageURL: default_pic,

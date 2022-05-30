@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
       - name: server
-        image: mosabami/smartbrainapi:v2
-        imagePullPolicy: Always
+        image: mosabami/smartbrainapi:v10
         resources:
         ports:
         - containerPort: 5000
