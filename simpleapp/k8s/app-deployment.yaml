@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: azure-app-deployment
-        image: mosabami/msdocsflaskapp:0.0.1
+        image: <acrName>.azurecr.io/simpleapp:v1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 2000
