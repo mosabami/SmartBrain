@@ -83,7 +83,7 @@ def get_detected():
     url = data['url']
 
     print('the url sent was', url)
-    img_data = requests.get(url).content
+    img_data = url
     # try:
     #     results = r.get(url).decode("utf-8")
     #     print('no calculation required', results)
