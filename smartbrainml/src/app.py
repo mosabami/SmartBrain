@@ -8,12 +8,13 @@ from flask_cors import CORS, cross_origin
 import redis
 import json
 
-# try:
-#     redis_host = os.environ['REDIS_HOST']
-# except:
-#     redis_host = '127.0.0.1'
-# r = redis.Redis(host=redis_host, port=6379, db=0)
-# print(redis_host)
+try:
+    redis_host = os.environ['REDIS_HOST']
+except:
+    redis_host = 'localhost'
+print(redis_host)
+r = redis.Redis(host=redis_host, port=6379, db=0)
+
 
 app = Flask(__name__)
 
@@ -76,10 +77,12 @@ def get_home():
 
 
 @cross_origin(supports_credentials=True)
-@app.route('/worker/ml', methods=['GET', 'POST'])
+@app.route('/worker/ml', methods=['POST'])
 def get_detected():
-    url = request.args.get('url')
-    print(url)
+    data = json.loads(request.data)
+    url = data['url']
+
+    print('the url sent was', url)
     img_data = requests.get(url).content
     # try:
     #     results = r.get(url).decode("utf-8")
@@ -91,4 +94,4 @@ def get_detected():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=2000)
+    app.run(host='0.0.0.0', port=2000, debug=True)

@@ -139,9 +139,22 @@ class App extends Component {
     })
   }
 
+  // calculateFaceLocation2 = async (url) => {
+  //   let endpoint =  '/worker/ml?url=' + url;
+  //   await axios.get(endpoint)
+  //   .then((response) => response.data)
+  //   .catch(err => console.log(err))
+  //   .then(box => this.displayFaceBox(box))
+  //   .catch(err => console.log(err))
+  //   .then(this.updateNumber())
+  //   .then(this.updateRank())
+  //   .catch(err => console.log(err))
+  // }
   calculateFaceLocation2 = async (url) => {
-    let endpoint =  '/worker/ml?url=' + url;
-    await axios.get(endpoint)
+    let endpoint =  '/worker/ml';
+    await axios.post(endpoint, {
+      url: url
+    })
     .then((response) => response.data)
     .catch(err => console.log(err))
     .then(box => this.displayFaceBox(box))
