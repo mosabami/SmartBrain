@@ -69,12 +69,20 @@ def run_ml_model(url, img_data, redisInstance, filename='image_name.jpg'):
 def get_rhome():
     return 'okay python2'
 
-
 @cross_origin(supports_credentials=True)
 @app.route('/worker', methods=['GET', 'POST'])
 def get_home():
     return 'okay python'
 
+@cross_origin(supports_credentials=True)
+@app.route('/worker/', methods=['GET'])
+def get_home():
+    return 'okay worker'
+
+@cross_origin(supports_credentials=True)
+@app.route('/worker/ml', methods=['GET'])
+def get_home():
+    return 'okay ml worker'
 
 @cross_origin(supports_credentials=True)
 @app.route('/worker/ml', methods=['POST'])
