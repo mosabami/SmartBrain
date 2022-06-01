@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: worker
-        image: gordonbmsft/smartbrainml:v12 #mosabami/smartbrainml:v11
+        image: gordonbmsft/smartbrainml:v13 #mosabami/smartbrainml:v11
+        #image: mosabami/smartbrainml:v11
         ports:
         - containerPort: 2000
         env:
@@ -23,7 +24,8 @@ spec:
         resources:
           requests:
             cpu: 250m
+            memory: 512Mi
           limits:
             cpu: 500m
-            memory: 512Mi
+            memory: 1Gi
 

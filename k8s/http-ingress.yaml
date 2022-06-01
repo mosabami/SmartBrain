@@ -1,74 +1,57 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-service
+  name: ingress-client-service
   annotations:
     kubernetes.io/ingress.class: 'azure/application-gateway'
     appgw.ingress.kubernetes.io/health-probe-timeout: "30"
     appgw.ingress.kubernetes.io/health-probe-interval: "10"
     appgw.ingress.kubernetes.io/request-timeout: "30"
     appgw.ingress.kubernetes.io/health-probe-unhealthy-threshold: "3"
-    
 spec:
   rules:
   - http:
       paths:
-      - pathType: Prefix
+      - pathType: Exact
         path: /
         backend:
           service:
             name: client-service
             port:
               number: 3000
-      - pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-api-service
+  annotations:
+    kubernetes.io/ingress.class: 'azure/application-gateway'
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: ImplementationSpecific
         path: /api/*
         backend:
           service:
             name: server-service
             port:
               number: 5000
-      - pathType: Prefix
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-worker-service
+  annotations:
+    kubernetes.io/ingress.class: 'azure/application-gateway'
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: ImplementationSpecific
         path: /worker/*
         backend:
           service:
             name: worker-service
             port:
               number: 2000
-
-
-# spec:
-#   rules:
-#     - http:
-#         paths:
-#       - pathType: ImplementationSpecific
-#           - path: /api/*
-#             # UPDATE PATH
-#             pathType: Prefix
-#             # ADD PATHTYPE
-#             backend:
-#               service:
-#                 # UPDATE SERVICE FIELDS
-#                 name: server-service
-#                 port:
-#                   number: 5000
-#           - path: /worker/*
-#             # UPDATE PATH
-#             pathType: Prefix
-#             # ADD PATHTYPE
-#             backend:
-#               service:
-#                 # UPDATE SERVICE FIELDS
-#                 name: worker-service
-#                 port:
-#                   number: 2000
-#           - path: /
-#             # UPDATE PATH
-#             pathType: Prefix
-#             # ADD PATHTYPE
-#             backend:
-#               service:
-#                 # UPDATE SERVICE FIELDS
-#                 name: client-service
-#                 port:
-#                   number: 3000
-
