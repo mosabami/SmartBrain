@@ -14,12 +14,16 @@ spec:
     spec:
       containers:
       - name: worker
-        image: mosabami/smartbrainml:v11
-        resources:
+        image: gordonbmsft/smartbrainml:v12 #mosabami/smartbrainml:v11
         ports:
         - containerPort: 2000
         env:
           - name: REDIS_HOST
             value: redis-service
-
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+            memory: 512Mi
 
