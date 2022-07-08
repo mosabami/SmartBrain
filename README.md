@@ -16,7 +16,7 @@ After cluster creation we can install the application onto the cluster
 
 ```bash
 az aks get-credentials -g smartbrain -n aks-smartbrain --overwrite-existing
-cd k8s
+cd ./smartbrain/k8s
 kubectl apply -f .
 ```
 
