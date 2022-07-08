@@ -23,6 +23,6 @@ git clone https://github.com/mosabami/smartbrain
 ```
 
 ```bash
-cd ./smartbrain/k8s
+cd ./smartbrain/smartbrain/k8s
 kubectl apply -f .
 ```
