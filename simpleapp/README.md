@@ -1,4 +1,4 @@
-# Deploy a Simple Python (Flask) web app to AKS Landing Zone
+# Stage 1: Deploy a Simple Python (Flask) web app to AKS Landing Zone
 
 This is the sample Flask application for the Azure Quickstart [Deploy a Python (Django or Flask) web app to Azure App Service](https://docs.microsoft.com/en-us/azure/app-service/quickstart-python).  For instructions on how to create the Azure resources and deploy the application to Azure, refer to the Quickstart article.
 
