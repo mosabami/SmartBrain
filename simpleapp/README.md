@@ -71,3 +71,8 @@ Get the ip address of the ingress controller and enter it in a browser to access
 ```bash
 kubectl get ingress 
 ```
+Congratulations! you have your first app deployed in an AKS Landing Zone
+
+## Next Step
+
+:arrow_forward: [Deploy and Smartbrain app](../smartbrain/README.md)
