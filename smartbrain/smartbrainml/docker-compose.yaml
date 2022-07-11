@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  web:
+    image: "mosabami/smartbrainml:vs1"
+    ports:
+      - "2000:2000"
+  redis:
+    image: "redis:alpine"

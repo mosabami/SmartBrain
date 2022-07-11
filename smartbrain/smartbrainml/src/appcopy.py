@@ -8,12 +8,12 @@ from flask_cors import CORS, cross_origin
 import redis
 import json
 
-try:
-    redis_host = os.environ['REDIS_HOST']
-except:
-    redis_host = 'redis'
-print(redis_host)
-r = redis.Redis(host=redis_host, port=6379, db=0)
+# try:
+#     redis_host = os.environ['REDIS_HOST']
+# except:
+#     redis_host = 'localhost'
+# print(redis_host)
+# r = redis.Redis(host=redis_host, port=6379, db=0)
 
 
 app = Flask(__name__)
@@ -28,10 +28,12 @@ print(origin)
 CORS(app, support_credentials=True, origins=[origin])
 
 
-def run_ml_model(url, img_data, redisInstance, filename='image_name.jpg'):
+def run_ml_model(url, img_data,  filename='image_name.jpg'):
     with open(filename, 'wb') as handler:
+        # print("helllllllllllllllllllllllllllllllllllllllllllllllo")
         handler.write(img_data)
     img = cv2.imread(filename)
+    print(img)
     width = 500
     height = int(img.shape[0]/img.shape[1] * 500)
     dim = (width, height)
@@ -59,7 +61,7 @@ def run_ml_model(url, img_data, redisInstance, filename='image_name.jpg'):
     # print(height)
     os.remove(filename)
     results = results[0]
-    redisInstance.set(url, json.dumps(results))
+    # redisInstance.set(url, json.dumps(results))
     print('had to run the calculation', json.dumps(results))
     return results
 
@@ -83,12 +85,12 @@ def get_detected():
 
     print('the url sent was', url)
     img_data = requests.get(url).content
-    try:
-        results = r.get(url).decode("utf-8")
-        print('no calculation required', results)
-        results = json.loads(results)
-    except AttributeError as e:
-        results = run_ml_model(url, img_data, r)
+    # try:
+    #     results = r.get(url).decode("utf-8")
+    #     print('no calculation required', results)
+    #     results = json.loads(results)
+    # except AttributeError as e:
+    results = run_ml_model(url, img_data)
     return jsonify(results)
 
 
