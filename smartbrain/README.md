@@ -4,7 +4,9 @@ ContosAI is a (fictional) artificial intelligence (AI) startup specializing in c
 ## Prerequisite
 To complete this, you need an AKS Landing Zone. If you haven't done so already, follow the steps in the [Deploy and Smartbrain app](../simpleapp/README.md) stage without completing the **Deploy the workload** part.
 
-We can leverage [AKS Deploy Helper](https://github.com/Azure/AKS-Construction) to quickly create a suitable environment with AKS cluster and Azure Appplicaton Gateway.
+You will also need to install [helm](https://helm.sh/docs/intro/install/)
+
+## Get started
 
 The architecture of the application after deployment will look like the picture below
 ![smartbrain screenshot](../media/finished-state.png).
@@ -19,7 +21,22 @@ After cluster creation we can install the application onto the cluster
 
 ```bash
 az aks get-credentials -g smartbrain -n aks-smartbrain --overwrite-existing
+```
+
+If you havent yet, clone the repo
+``bash
 git clone https://github.com/mosabami/smartbrain
+```
+
+Install nginx ingress controller in your cluster
+```bash
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace
+```
+Deploy the required resources to make nginx work for Azure
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.1/deploy/static/provider/cloud/deploy.yaml
 ```
 
 ```bash
