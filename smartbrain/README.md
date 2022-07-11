@@ -1,7 +1,8 @@
-# Deploy a SmartBrain web app to AKS Landing Zone
+# Stage 2: Deploy a SmartBrain web app to AKS Landing Zone
 ContosAI is a (fictional) artificial intelligence (AI) startup specializing in computer vision. They leverage machine learning and deep neural networks to identify and analyze images and videos. The company offers its solution via API, mobile SDK, and on-premise solutions. To showcase their cutting edge ML models, they are developing a customer facing application whereby customers can sign-up, provide images, and watch ContosAI's face detection model detect the faces in the model. The app is gamified by storing the number of times a user has used the face detector. It ranks the user compared with other users. ContosAI is planning to use the application to showcase their capabilities. They plan to host this new workload on in AKS.
 
-## Getting started - AKS Deploy Helper
+## Prerequisite
+To complete this, you need an AKS Landing Zone. If you haven't done so already, follow the steps in the [Deploy and Smartbrain app](../simpleapp/README.md) stage without completing the **Deploy the workload** part.
 
 We can leverage [AKS Deploy Helper](https://github.com/Azure/AKS-Construction) to quickly create a suitable environment with AKS cluster and Azure Appplicaton Gateway.
 
