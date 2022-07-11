@@ -9,9 +9,11 @@ If you need an Azure account, you can [create on for free](https://azure.microso
 ## Getting started - AKS Deploy Helper
 
 We can leverage [AKS Deploy Helper](https://github.com/Azure/AKS-Construction) to quickly create a suitable environment with AKS cluster and Azure Appplicaton Gateway.
-
+```bash
+REGION=< your region, eg eastus>
+```
 ```azurecli
-az group create -n aks-smartbrain -l eastus
+az group create -n aks-smartbrain -l $REGION
 RGNAME=aks-smartbrain
 az deployment group create -g $RGNAME  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.8.2/main.json --parameters \
 	resourceName=smartbrain \
