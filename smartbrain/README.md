@@ -17,6 +17,7 @@ az group create -n smartbrain -l eastus
 az deployment group create -g smartbrain -u https://aka.ms/aksc/json -p https://raw.githubusercontent.com/Azure/AKS-Construction/main/.github/workflows_dep/regressionparams/managed-public.json -p resourceName=smartbrain CreateNetworkSecurityGroups=false
 ```
 
+## Install the application
 After cluster creation we can install the application onto the cluster
 
 ```bash
@@ -27,7 +28,7 @@ If you havent yet, clone the repo
 ``bash
 git clone https://github.com/mosabami/smartbrain
 ```
-
+## Install NGINX
 Install nginx ingress controller in your cluster
 ```bash
 helm upgrade --install ingress-nginx ingress-nginx \
@@ -43,3 +44,6 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 cd ./smartbrain/k8s
 kubectl apply -f .
 ```
+
+### Configure Back end pool to point to Nginx
+
