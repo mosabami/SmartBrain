@@ -1,16 +1,28 @@
 # Stage 1: Deploy a Simple Python (Flask) web app to AKS Landing Zone
 
-This is the sample Flask application for the Azure Quickstart [Deploy a Python (Django or Flask) web app to Azure App Service](https://docs.microsoft.com/en-us/azure/app-service/quickstart-python).  For instructions on how to create the Azure resources and deploy the application to Azure, refer to the Quickstart article.
+This is the sample Flask application for the Azure Quickstart [Deploy a Python (Django or Flask) web app to Azure App Service](https://docs.microsoft.com/en-us/azure/app-service/quickstart-python). In this stage you will follow the instructions below to deploy it into an AKS Landing Zone. Get started by creating the landing zone using AKS Deploy Helper using the commands provided below (you don't have to click on any of the links).
 
-A Django sample application is also available for the article at [https://github.com/Azure-Samples/msdocs-python-django-webapp-quickstart](https://github.com/Azure-Samples/msdocs-python-django-webapp-quickstart).
 
 If you need an Azure account, you can [create on for free](https://azure.microsoft.com/en-us/free/).
 
 ## Getting started - AKS Deploy Helper
 
 We can leverage [AKS Deploy Helper](https://github.com/Azure/AKS-Construction) to quickly create a suitable environment with AKS cluster and Azure Appplicaton Gateway.
+
+Begin deployment by running the commands below in a bash terminal. You can always use Azure cloud shell. This will deploy the following resources for the AKS landing zone:
+* AKS cluster
+* Virtual network
+* Application gateway with WAF
+* Azure container registry
+* Managed identity for AKS and App gateway
+* Azure keyvault
+* Log analytics workspace
+
+To make the deployment more secure, you will only allow access to your cluster from your ip address. Get your ip address by typing the following in google: whats my ip in windows or entering `hostname -I` in linux or Azure cloudshell.
+
 ```bash
 REGION=< your region, eg eastus>
+IPADDRESS=< your ip address or 0.0.0.0/0>
 ```
 ```azurecli
 az group create -n aks-smartbrain -l $REGION

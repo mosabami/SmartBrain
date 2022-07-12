@@ -116,7 +116,7 @@ nginx-ingress-ingress-nginx-controller   LoadBalancer   10.0.74.133   EXTERNAL_I
 1. Select Public
 1. Enter *8080* as the port
 1. Click on **Add** at the bottom
-![smartbrain screenshot](./media/smartbrain.png)
+![smartbrain screenshot](../media/creating-listener.png)
 
 ### Add backend  to the Application gateway
 
