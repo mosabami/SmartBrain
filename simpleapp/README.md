@@ -89,6 +89,7 @@ kubectl get ingress
 Congratulations! you have your first app deployed in an AKS Landing Zone. Delete the workload
 ```bash
 kubectl delete -f . 
+cd ../..
 ```
 ## Next Step
 
