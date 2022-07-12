@@ -25,7 +25,7 @@ az aks get-credentials -g smartbrain -n aks-smartbrain --overwrite-existing
 ```
 
 If you havent yet, clone the repo
-``bash
+```bash
 git clone https://github.com/mosabami/smartbrain
 ```
 ## Install NGINX
