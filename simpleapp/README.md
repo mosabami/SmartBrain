@@ -59,15 +59,6 @@ az aks get-credentials -g smartbrain -n aks-smartbrain --overwrite-existing
 git clone https://github.com/mosabami/smartbrain
 ```
 
-Log into the registry
-```bash
-ACRNAME=<container registry name>
-sudo az acr login -g $RGNAME -n $ACRNAME
-```
-If you are having trouble logging in, follow these steps to log into ACR.
-1. Go to Azure Portal and clock on the container registry (ACR) you just deployed with AKS. On the left plane click on Access Keys then enable Admin User. Then you will be able to see the ACR password. The name of the container registry is the username. 
-1. Enter username and password for the registry if prompted.
-
 ## Deploy the workload
 Build the image
 ```bash
@@ -89,6 +80,7 @@ kubectl get ingress
 Congratulations! you have your first app deployed in an AKS Landing Zone. Delete the workload
 ```bash
 kubectl delete -f . 
+cd ../..
 ```
 ## Next Step
 
