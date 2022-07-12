@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: worker
-        image: mosabami/smartbrainml:vs1 # update this to use the image in your registry eg <acrName>.azurecr.io/smartbrain/smartbrainworker
+        image: mosabami/smartbrainml:vs1 # update this to use the image in your registry eg <acrName>.azurecr.io/smartbrain/smartbrainworker:v1
         ports:
         - containerPort: 2000
         env:

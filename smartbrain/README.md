@@ -11,12 +11,6 @@ You will also need to install [helm](https://helm.sh/docs/intro/install/)
 The architecture of the application after deployment will look like the picture below
 ![smartbrain screenshot](../media/finished-state.png).
 
-Create the cluster using AKS Deploy Helper
-```azurecli
-az group create -n smartbrain -l eastus
-az deployment group create -g smartbrain -u https://aka.ms/aksc/json -p https://raw.githubusercontent.com/Azure/AKS-Construction/main/.github/workflows_dep/regressionparams/managed-public.json -p resourceName=smartbrain CreateNetworkSecurityGroups=false
-```
-
 ## Install the application
 After cluster creation we can install the application onto the cluster
 
@@ -52,42 +46,32 @@ az acr import --name $ACRNAME --source $SOURCE_REGISTRY/$PATCH_IMAGE:$PATCH_TAG 
 az acr import --name $ACRNAME --source $SOURCE_REGISTRY/$DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG --image $DEFAULTBACKEND_IMAGE:$DEFAULTBACKEND_TAG
 ```
 
-You will be using a loadbalancer service with your ingress controller. for better security, we are using an load balancer with an internal ip. Modify the internal-ingress.yaml file so that it has an ip address from your AKS cluster's subnet. If you followed the instructions so far, 10. should work.
+You will be using a loadbalancer service with your ingress controller. for better security, we are using an load balancer with an internal ip. Modify the internal-ingress.yaml file so that it has an ip address from your AKS cluster's subnet. If you followed the instructions so far, `10.240.2.5` should work.
 
 ```bash
 code internal-ingress.yaml
 ```
 
-Install nginx ingress controller in your cluster
-```bash
-# Add the ingress-nginx repository
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-```
-
 # Use Helm to deploy an NGINX ingress controller
 ```bash
+cd ./smartbrain/k8s
+```
+
+```bash
+# Create a namespace for your ingress resources
+kubectl create namespace ingress-basic
+
+# Add the ingress-nginx repository
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+
+# Use Helm to deploy an NGINX ingress controller
 helm install nginx-ingress ingress-nginx/ingress-nginx \
-    --version 4.1.3 \
     --namespace ingress-basic \
-    --create-namespace \
+    -f internal-ingress.yaml \
     --set controller.replicaCount=2 \
-    --set controller.nodeSelector."kubernetes\.io/os"=linux \
-    --set controller.image.registry=$ACR_URL \
-    --set controller.image.image=$CONTROLLER_IMAGE \
-    --set controller.image.tag=$CONTROLLER_TAG \
-    --set controller.image.digest="" \
-    --set controller.admissionWebhooks.patch.nodeSelector."kubernetes\.io/os"=linux \
-    --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
-    --set controller.admissionWebhooks.patch.image.registry=$ACR_URL \
-    --set controller.admissionWebhooks.patch.image.image=$PATCH_IMAGE \
-    --set controller.admissionWebhooks.patch.image.tag=$PATCH_TAG \
-    --set controller.admissionWebhooks.patch.image.digest="" \
-    --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
-    --set defaultBackend.image.registry=$ACR_URL \
-    --set defaultBackend.image.image=$DEFAULTBACKEND_IMAGE \
-    --set defaultBackend.image.tag=$DEFAULTBACKEND_TAG \
-    --set defaultBackend.image.digest="" \
-    -f internal-ingress.yaml
+    --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+    --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+    --set controller.admissionWebhooks.patch.nodeSelector."beta\.kubernetes\.io/os"=linux 
 ```
 <!-- Deploy the required resources to make nginx work for Azure
 ```bash
@@ -105,29 +89,35 @@ When the Kubernetes load balancer service is created for the NGINX ingress contr
 
 ```output
 NAME                                     TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                      AGE   SELECTOR
-nginx-ingress-ingress-nginx-controller   LoadBalancer   10.0.74.133   EXTERNAL_IP     80:32486/TCP,443:30953/TCP   44s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=nginx-ingress,app.kubernetes.io/name=ingress-nginx
+nginx-ingress-ingress-nginx-controller   LoadBalancer   10.240.2.5   EXTERNAL_IP     80:32486/TCP,443:30953/TCP   44s   app.kubernetes.io/component=controller,app.kubernetes.io/instance=nginx-ingress,app.kubernetes.io/name=ingress-nginx
 ```
 
 ### Add listener to the Application gateway
 
-1. Go to the portal, click on your application gateway resource and click on *listeners* in the left plane
+1. Go to the Azure portal, click on your application gateway resource and click on *listeners* in the left plane
 1. Click on *Add listener* at the top of the resulting pane
 1. Enter listener name
 1. Select Public
 1. Enter *8080* as the port
 1. Click on **Add** at the bottom
-![smartbrain screenshot](../media/creating-listener.png)
+![Create listener](../media/creating-listener.png)
 
 ### Add backend  to the Application gateway
 
+1. Go to the portal, click on your application gateway resource and click on *Backend pools* in the left plane
+1. Click on *Add* at the top of the resulting pane
+1. Enter Backend pool name
+1. Enter the internal IP address you chose earlier in the IP address or FQDN field
+1. Click on **Add** at the bottom
+![Create Backend pool](../media/creating-listener.png)
 
 ## Build the application container into your ACR
-***This part is optional***. You can skip this step if you want to use the image provided in dockerhub.
+**This part is optional**. You can skip this step if you want to use the image provided in dockerhub. If you are skipping it, proceed to the deploy the application section.
 
-1. Build the worker image
+Build the worker image
 ```bash
-cd ./smartbrain/smartbrainml
-az acr build -t smartbrain/smartbrainworker -r $ACRNAME .
+cd ../smartbrainml
+az acr build -t smartbrain/smartbrainworker:v1 -r $ACRNAME .
 ```
 update the image field in the smartbrain/k8s/worker-deployment.yaml file with the proper image name. it should be similar to <acrName>.azurecr.io/smartbrain/smartbrainworker
 
@@ -139,7 +129,7 @@ code k8s/worker-deployment.yaml
 Repeat the same step for the client and the server deployments 
 ```bash
 cd smartbrainclient
-az acr build -t smartbrain/smartbrainclient -r $ACRNAME .
+az acr build -t smartbrain/smartbrainclient:v1 -r $ACRNAME .
 ```
 
 ``` bash
@@ -148,8 +138,8 @@ code k8s/client-deployment.yaml
 ```
 
 ```bash
-cd smartbrainclient
-az acr build -t smartbrain/smartbrainapi -r $ACRNAME .
+cd smartbrainapi
+az acr build -t smartbrain/smartbrainapi:v1 -r $ACRNAME .
 ```
 
 ``` bash
@@ -157,10 +147,19 @@ cd ../k8s
 code server-deployment.yaml
 ```
 
-Deploy the application
+**end of optional section**
+
+## Deploy the application
 
 ```bash
 kubectl apply -f .
 ```
 
-**end of optional section**
+You can only access this cluster via the application gateway's public IP address. Go to the Azure portal and click on your Application gateway resource. You will find its IP address in the top right corner of the resulting screen. Copy it and paste it into a browser to access the application. Sign up and enter the url of a picture into the space provided. You will find an example url you can start with. Click on the detect button and you will find that the application was unable to detect the face in the picture. This is because of the web application firewall provided by the application gateway. In production, you dont want users routinely downloading content that could potentially be malicious into your network. For demo purposes however follow the instructions below to disable the firewall.
+
+### Disable web application firewall of your appilcation gateway
+1. In Azure portal, click on your Application gateway resource and click on the *Web application firewall* button in the left plane
+1. In the *WAF mode* field, select the *Detection* option
+1. Click the *Save* button at the top of the screen
+
+

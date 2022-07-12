@@ -22,13 +22,14 @@ To make the deployment more secure, you will only allow access to your cluster f
 
 ```bash
 REGION=< your region, eg eastus>
-IPADDRESS=< your ip address or 0.0.0.0/0>
+RGNAME=smartbrain
 ```
 ```azurecli
-az group create -n aks-smartbrain -l $REGION
-RGNAME=aks-smartbrain
-az deployment group create -g $RGNAME  --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.8.2/main.json --parameters \
-	resourceName=smartbrain \
+az group create -l $REGION -n $RGNAME 
+
+# Deploy template with in-line parameters 
+az deployment group create -g $RGNAME --template-uri https://github.com/Azure/AKS-Construction/releases/download/0.8.2/main.json --parameters \
+	resourceName=aks-smartbrain \
 	upgradeChannel=stable \
 	custom_vnet=true \
 	enable_aad=true \
@@ -41,7 +42,6 @@ az deployment group create -g $RGNAME  --template-uri https://github.com/Azure/A
 	retentionInDays=30 \
 	networkPolicy=azure \
 	azurepolicy=audit \
-	authorizedIPRanges="[\"0.0.0.0/0\"]" \
 	ingressApplicationGateway=true \
 	appGWcount=0 \
 	appGWsku=WAF_v2 \
