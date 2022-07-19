@@ -2,6 +2,7 @@ Here are the resources required for the simple version
 AKS 
 ACR
 virtual network
+application gateway
 Azure cache forRedis 
 Azure PostGres database
 log analytics workspace
@@ -10,6 +11,5 @@ log analytics workspace
 Here are the resources required for the complex version
 all the above
 azure keyvault
-application gateway
 azure firewall
 network security groups
