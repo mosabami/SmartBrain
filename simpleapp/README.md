@@ -62,6 +62,7 @@ git clone https://github.com/mosabami/smartbrain
 ## Deploy the workload
 Build the image
 ```bash
+cd ./smartbrain/simpleapp
 az acr build -t sample/simpleapp -r $ACRNAME .
 ```
 Switch to the k8s folder and update the k8s manifest file with your correct container registry name
