@@ -27,7 +27,7 @@ const handleRegister = async (req,res,db) => {
             return trx(tableName)
                 .returning('*')
                 .insert({
-                    email: loginEmail[0],
+                    email: email,
                     name: name,
                     joined: new Date()
                 }).then(user => {

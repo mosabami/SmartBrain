@@ -2,22 +2,24 @@ const  { Password }  = require('../helpers/password');
 const passwordHasher = new Password()
 
 const tableName = 'users'
-const handleSignin = (req,res,db) => {
+const handleSignin =async  (req,res,db) => {
     let { email, password } = req.body
     if (!email || !password) {
         return res.status(400).json('incorrect form submision')
     }
     db.select('email','hash').from('login')
         .where('email','=',email)
-        .then(data => {
-            console.log(data)
+        .then(async data => {
+            console.log("the data i got from login is",data)
             const { email,hash } = data[0];
-            if(passwordHasher.compare(hash, password)) {
+            const correctpass = await passwordHasher.compare(hash, password)
+            console.log("was the password correct?",correctpass)
+            if(correctpass === true) {
                 console.log('the hash is',hash);
                 return db.select('*').from(tableName)
                 .where('email','=',email)
                 .then(user => {
-                    // console.log(user);
+                    console.log("tge user i found is ",user);
                     res.json(user[0]);
                 })
                 .catch(err =>res.status(400).json('unable to get user'))

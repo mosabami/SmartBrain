@@ -1,0 +1,73 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+      - POSTGRES_USER=pguser
+  redis:
+    image: 'redis:latest'
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - '3050:80'
+  api:
+    depends_on:
+      - postgres
+      - redis
+      - worker
+    build:
+      dockerfile: Dockerfile
+      context: ./smartbrainapi
+    ports:
+      - "5000:5000"
+    # volumes:
+    #   - /app/node_modules
+    #   - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PGUSER=pguser
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+  # client:
+  #   stdin_open: true
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: ./client
+  #   ports:
+  #       - "3000:3000"
+
+  client:
+    stdin_open: true
+    container_name: client
+    build:
+      context: ./smartbrainclient
+      dockerfile: Dockerfile
+    # volumes:
+    #   - '.:/app'
+    #   - '/app/node_modules'
+    ports:
+      - 3000:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  worker:
+    build:
+      dockerfile: Dockerfile
+      context: ./smartbrainml
+    ports:
+      - 2000:2000
+    # volumes:
+    #   - /app/node_modules
+    #   - ./worker:/app
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
