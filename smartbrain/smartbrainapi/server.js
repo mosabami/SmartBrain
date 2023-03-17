@@ -26,6 +26,8 @@ if (sslFlag === 'false') {
   var resolvedSSL = true
 }
 console.log("is ssl enabled?", resolvedSSL)
+console.log("pghost?", pgHost)
+console.log("pg database?", pgDatabase)
 
 const tableName = 'users'
 connection = {
@@ -36,6 +38,8 @@ connection = {
   port: pgPort,
   ssl: resolvedSSL
 }
+
+
 const pg = knex({
   client: 'pg',
   connection: connection,

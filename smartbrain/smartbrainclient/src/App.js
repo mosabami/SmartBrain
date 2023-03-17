@@ -21,7 +21,7 @@ const initialState = {
   isSignedIn: false,
   signinfail: '',
   user: {
-    id:'',
+    id:-1,
     name:'',
     email:'',
     entries: 0,

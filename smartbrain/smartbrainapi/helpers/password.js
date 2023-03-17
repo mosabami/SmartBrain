@@ -15,6 +15,7 @@ class Password {
         const [hashPassword,salt] = storedPassword.split('.');
         console.log(salt)
         const buff = (await scryptAsync(suppliedPassword, salt,64));
+        // return false;
         return buff.toString('hex') === hashPassword;
     }
 }
