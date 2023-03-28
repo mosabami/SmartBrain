@@ -1,6 +1,6 @@
 import React from 'react';
 const Rank = ({ name, entries,rank }) => {
-    console.log('today its',rank)
+    // console.log('today its',rank)
     return (
         <div>
             <div className='white f3 '>

@@ -7,15 +7,10 @@ const handleRegister = async (req,res,db) => {
     // const salt = bcrypt.genSaltSync(10);
     const hash = await passwordHasher.toHash(password);
     console.log('second hash',hash)
-    // const hash = bcrypt.hashSync(password, salt);
-    // bcrypt.compare(myPlaintextPassword, hash, function(err, res) {
-    //     console.log(res)
-    //     // if res == true, password matched
-    //     // else wrong password
-    //     })
-    console.log("haaaash is", hash)
+    console.log("hash is", hash)
     if (!email || !name || !password) {
-        return res.status(400).json('incorrect form submision')
+        return res.json({"error":'incorrect form submision'})
+        // return res.status(400).json('incorrect form submision')
     }
     db.transaction(trx => {
         trx.insert({
@@ -35,8 +30,10 @@ const handleRegister = async (req,res,db) => {
                     console.log("registered", user)
                 })
         }).then(trx.commit).catch(trx.rollback)
-    }).catch(err=> res.status(400).json(err))
+    }).catch(err=> res.json(err))
 }
+
+
 module.exports = {
     handleRegister:handleRegister
 }

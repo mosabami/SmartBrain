@@ -1,0 +1,1 @@
+command: ["curl -X POST   http://api-service/api/initialregister   -H 'Cache-Control: no-cache'   -H 'Content-Type: application/json' -d '{}'" ]

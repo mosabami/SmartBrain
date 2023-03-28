@@ -21,7 +21,7 @@ app = Flask(__name__)
 # get permitted origins. first attempt to get the client url from environment variable
 try:
     origin = os.environ['CLIENT_URL']
-except(KeyError):
+except (KeyError):
     # origin = "http://localhost:*"
     origin = '*'
 print(origin)
@@ -53,7 +53,8 @@ def run_ml_model(url, img_data, redisInstance, filename='image_name.jpg'):
         h = faces_coordinates[3]
         results.append({"leftCol": x, "topRow": y,
                        "rightCol": width-(x+w), "bottomRow": height-(y+h)})
-        cv2.rectangle(pixels, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        cv2.rectangle(pixels, (x, y), (x+h, y+w), (255, 0, 0), 2)
+        # cv2.rectangle(pixels, (x, y), (x+w, y+h), (255, 0, 0), 2)
         # print(x+w,y+h)
     # cv2.imwrite("image_name2.jpg",pixels)
     # print(height)
@@ -74,6 +75,7 @@ def get_rhome():
 @app.route('/worker', methods=['GET', 'POST'])
 def get_home():
     return jsonify('okay python')
+
 
 @cross_origin(supports_credentials=True)
 @app.route('/worker/ml', methods=['POST'])

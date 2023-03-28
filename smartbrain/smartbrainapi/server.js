@@ -31,7 +31,7 @@ console.log("pg database?", pgDatabase)
 
 const tableName = 'users'
 connection = {
-  host: pgHost,
+  host: `127.1.1.17`,
   user: pgUser,
   password: pgPassword,
   database: pgDatabase,
@@ -68,6 +68,9 @@ pg.schema.hasTable('login').then(function (exists) {
   }
 });
 
+
+
+
 app.post('/api/signin', (req, res) => signin.handleSignin(req, res, pg))
 
 app.post('/api/register', (req, res) => register.handleRegister(req, res,  pg))
@@ -79,9 +82,18 @@ app.put('/api/imagecount', (req, res) => {
   pg(tableName).where('id', '=', id)
     .increment('entries', 1)
     .returning('entries')
-    .then(entry => res.json(entry[0]))
+    .then(entry => {
+      let bug = false
+      if (bug == true) {
+        res.json(entry[0])
+      }
+      else {
+        res.json(entry[0].entries)
+      }
+    } )
     .catch(err => res.status(400).json('could not get entries'))
 })
+
 
 app.put('/api/imagerank', (req, res) => {
   const { id } = req.body
