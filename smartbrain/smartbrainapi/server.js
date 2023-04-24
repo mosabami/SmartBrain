@@ -31,7 +31,7 @@ console.log("pg database?", pgDatabase)
 
 const tableName = 'users'
 connection = {
-  host: `127.1.1.17`,
+  host: pgHost,
   user: pgUser,
   password: pgPassword,
   database: pgDatabase,

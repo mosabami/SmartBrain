@@ -10,11 +10,14 @@ import json
 
 try:
     redis_host = os.environ['REDIS_HOST']
+    redis_port = os.environ['REDIS_PORT']
+    redis_password = os.environ['REDIS_PWD']
+    redis_ssl = os.environ['REDIS_SSL']
+
 except:
     redis_host = 'redis'
-print(redis_host)
-r = redis.Redis(host=redis_host, port=6379, db=0)
 
+r = redis.Redis(host=redis_host, port=redis_port, db=0, ssl=redis_ssl)
 
 app = Flask(__name__)
 
