@@ -18,14 +18,14 @@ spec:
         ports:
         - containerPort: 2000
         env:
-          - name: REDIS_HOST # ACRE Host Url
+          - name: REDIS_HOST
             value: ""
           - name: REDIS_PORT
-            value: "10000" # Default ACRE port
-          - name: REDIS_PWD # ACRE Key
+            value: "" 
+          - name: REDIS_PWD 
             value : ""
           - name: REDIS_SSL
-            value : "1"
+            value : "0"
         resources:
           requests:
             cpu: 250m
