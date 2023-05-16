@@ -17,7 +17,7 @@ try:
 except:
     redis_host = 'redis'
 
-r = redis.Redis(host=redis_host, port=redis_port, db=0, ssl=redis_ssl)
+r = redis.Redis(host=redis_host, password=redis_password, port=redis_port, db=0, ssl=redis_ssl)
 
 app = Flask(__name__)
 
