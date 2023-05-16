@@ -109,7 +109,11 @@ nginx-ingress-ingress-nginx-controller   LoadBalancer   10.240.2.5   EXTERNAL_IP
 1. Enter Backend pool name
 1. Enter the internal IP address you chose earlier in the IP address or FQDN field
 1. Click on **Add** at the bottom
-![Create Backend pool](../media/creating-listener.png)
+![Create Backend pool](../media/creating-backend-pools.png)
+
+### Add routing rule to the Application gateway
+The screenshot below shows how to add the routing rules
+![add routing rule](../media/create-routing-rules-backend.png)
 
 ## Build the application container into your ACR
 **This part is optional**. You can skip this step if you want to use the image provided in dockerhub. If you are skipping it, proceed to the deploy the application section.
