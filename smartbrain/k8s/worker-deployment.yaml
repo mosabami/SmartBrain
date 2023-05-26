@@ -19,7 +19,13 @@ spec:
         - containerPort: 2000
         env:
           - name: REDIS_HOST
-            value: redis-service
+            value: ""
+          - name: REDIS_PORT
+            value: "" 
+          - name: REDIS_PWD 
+            value : ""
+          - name: REDIS_SSL
+            value : "1"
         resources:
           requests:
             cpu: 250m

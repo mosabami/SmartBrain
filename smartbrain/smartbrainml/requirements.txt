@@ -1,7 +1,7 @@
-numpy==1.22.4
+numpy==1.24.2
 flask==2.1.2
 flask_cors==3.0.10
-tensorflow==2.9.1
+tensorflow==2.10.0
 opencv-python==4.6.0.66
 mtcnn==0.1.1
-redis==4.3.4
+redis==4.4.4

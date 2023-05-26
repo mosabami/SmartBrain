@@ -15,7 +15,6 @@ spec:
       containers:
       - name: client
         image: mosabami/smartbrainclient # update this to use the image in your registry eg <acrName>.azurecr.io/smartbrain/smartbrainclient
-        resources:
         ports:
         - containerPort: 3000
         env:
@@ -23,3 +22,10 @@ spec:
             value: server-service
           - name: WORKER_URL
             value: worker-service
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
